@@ -1,9 +1,8 @@
-#include "sandpiles.h"
+#include <stdio.h>
 
 /**
  * print_grid - Print 3x3 grid
  * @grid: 3x3 grid
- *
  */
 static void print_grid(int grid[3][3])
 {
@@ -93,7 +92,6 @@ int topple_sandpile(int grid1[3][3], int grid_copy[3][3], int i, int j)
  * sandpiles_sum - Computes the sum of two sandpiles
  * @grid1: Left 3x3 grid
  * @grid2: Right 3x3 grid
- *
  */
 void sandpiles_sum(int grid1[3][3], int grid2[3][3])
 {
