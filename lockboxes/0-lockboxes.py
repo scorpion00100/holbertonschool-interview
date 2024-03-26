@@ -24,7 +24,7 @@ def canUnlockAll(boxes):
 
         # to know if we can unlock box.
         boxes_to_unlock = add_keys(boxes_to_unlock, 
-                                unlocked_boxes, boxes, index)
+                                   unlocked_boxes, boxes, index)
 
         # We do this to mark the box at the index as unlocked.
         unlocked_boxes[index] = True
