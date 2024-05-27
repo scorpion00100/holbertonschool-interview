@@ -6,7 +6,6 @@ def minOperations(n):
     """
     Method that calculates the fewest number of operations
     """
-    
     if n <= 1:
         return 0
 
