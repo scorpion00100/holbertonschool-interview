@@ -21,8 +21,8 @@ def validUTF8(data) -> bool:
         data: A list of integers where each integer
         represents one byte (8 bits) of data.
     Returns:
-        bool: True if data is a valid UTF-8 encoding,
-        else False.
+        bool: True if data is a valid UTF-8 
+        encoding, else False.
     """
     count = 0
     for d in data:
