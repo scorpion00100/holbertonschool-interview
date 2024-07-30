@@ -14,19 +14,13 @@ def count_leading_ones(n: int) -> int:
 def validUTF8(data) -> bool:
     """
     Determines if a given data set represents a valid UTF-8 encoding.
-    
     Args:
         data: A list of integers where each integer represents one byte (8 bits) of data.
-    
     Returns:
         bool: True if data is a valid UTF-8 encoding, else False.
     """
     count = 0
     for d in data:
-        # Ensure the integer is within the range of a valid byte (0-255)
-        if d < 0 or d > 255:
-            return False
-
         if count == 0:
             count = count_leading_ones(d)
             if count == 0:
