@@ -12,6 +12,7 @@ def count_leading_ones(n: int) -> int:
             break
     return count
 
+
 def validUTF8(data) -> bool:
     """
     Determines if a given data set represents
