@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """0-validate_utf8 module"""
 
+
 def count_leading_ones(n: int) -> int:
     """Counts the number of leading ones in the binary representation of a byte."""
     count = 0
@@ -13,11 +14,14 @@ def count_leading_ones(n: int) -> int:
 
 def validUTF8(data) -> bool:
     """
-    Determines if a given data set represents a valid UTF-8 encoding.
+    Determines if a given data set represents
+    a valid UTF-8 encoding.
     Args:
-        data: A list of integers where each integer represents one byte (8 bits) of data.
+        data: A list of integers where each integer
+        represents one byte (8 bits) of data.
     Returns:
-        bool: True if data is a valid UTF-8 encoding, else False.
+        bool: True if data is a valid UTF-8 encoding,
+        else False.
     """
     count = 0
     for d in data:
