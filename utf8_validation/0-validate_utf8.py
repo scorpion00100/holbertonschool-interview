@@ -18,10 +18,10 @@ def validUTF8(data) -> bool:
     Determines if a given data set represents
     a valid UTF-8 encoding.
     Args:
-        data: A list of integers where each integer
-        represents one byte (8 bits) of data.
+        data: A list of integers where each
+        integer represents one byte (8 bits).
     Returns:
-        bool: True if data is a valid UTF-8 
+        bool: True if data is a valid UTF-8
         encoding, else False.
     """
     count = 0
