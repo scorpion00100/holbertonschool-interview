@@ -3,7 +3,10 @@
 
 
 def count_leading_ones(n: int) -> int:
-    """Counts the number of leading ones in the binary representation of a byte."""
+    """
+    Counts the number of leading ones
+    in the binary representation of a byte.
+    """
     count = 0
     for i in range(7, -1, -1):
         if n & (1 << i):
