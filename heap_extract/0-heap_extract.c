@@ -1,10 +1,13 @@
 #include "binary_trees.h"
 
 /**
- * swap - Swaps two values using the Heap sort algorithm
+ * swap - Swaps two values
+ * using the Heap sort algorithm
  *
  * @a: First value
  * @b: Second value
+ *
+ * Return: Nothing
  */
 void swap(heap_t *a, heap_t *b)
 {
@@ -18,16 +21,17 @@ void swap(heap_t *a, heap_t *b)
  * heapify - Builds a heap from the element to be sorted
  *
  * @root: double pointer to the root node
- */
+ *
+*/
 void heapify(heap_t **root)
 {
 	heap_t *max = *root;
 	heap_t *left = (*root)->left;
 	heap_t *right = (*root)->right;
 
-	if (left && left->n > max->n)
+	if (left != NULL && left->n > max->n)
 		max = left;
-	if (right && right->n > max->n)
+	if (right != NULL && right->n > max->n)
 		max = right;
 
 	if (max != *root)
@@ -65,7 +69,7 @@ heap_t *get_last_node(heap_t *root, int size)
 	int level = 0, index;
 
 	if (!root || size == 0 || !queue)
-		return (NULL);
+		return (0);
 
 	queue[level++] = root;
 	index = 0;
@@ -84,40 +88,8 @@ heap_t *get_last_node(heap_t *root, int size)
 }
 
 /**
- * disconnect_last_node - Disconnects the last node from its parent
- * @last_node: pointer to the last node
- */
-void disconnect_last_node(heap_t *last_node)
-{
-	if (last_node->parent && last_node->parent->left == last_node)
-		last_node->parent->left = NULL;
-	else if (last_node->parent && last_node->parent->right == last_node)
-		last_node->parent->right = NULL;
-}
-
-/**
- * replace_root_with_last - Replaces root with last node and rebalances the heap
- * @root: double pointer to the root node
- * @last_node: pointer to the last node
- */
-void replace_root_with_last(heap_t **root, heap_t *last_node)
-{
-	last_node->left = (*root)->left;
-	last_node->right = (*root)->right;
-	last_node->parent = NULL;
-
-	if (last_node->left)
-		last_node->left->parent = last_node;
-	if (last_node->right)
-		last_node->right->parent = last_node;
-
-	free(*root);
-	*root = last_node;
-	heapify(root);
-}
-
-/**
  * heap_extract - Extracts the root node of a Max Binary Heap
+ *
  * @root: double pointer to the root node of the heap
  * Return: the value stored in the root node on success, 0 on failure
  */
@@ -132,10 +104,13 @@ int heap_extract(heap_t **root)
 	value = (*root)->n;
 	size = heap_size(*root);
 	last_node = get_last_node(*root, size);
-	if (!last_node)
+	if (last_node == 0)
 		return (0);
 
-	disconnect_last_node(last_node);
+	if (last_node->parent && last_node->parent->left == last_node)
+		last_node->parent->left = NULL;
+	else if (last_node->parent && last_node->parent->right == last_node)
+		last_node->parent->right = NULL;
 
 	if (*root == last_node)
 	{
@@ -144,7 +119,19 @@ int heap_extract(heap_t **root)
 		return (value);
 	}
 
-	replace_root_with_last(root, last_node);
+	last_node->parent = (*root)->parent;
+	last_node->left = (*root)->left;
+	last_node->right = (*root)->right;
+
+	if (last_node->left)
+		last_node->left->parent = last_node;
+	if (last_node->right)
+		last_node->right->parent = last_node;
+
+	free(*root);
+	*root = last_node;
+
+	heapify(root);
 
 	return (value);
 }
