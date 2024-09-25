@@ -84,8 +84,40 @@ heap_t *get_last_node(heap_t *root, int size)
 }
 
 /**
+ * disconnect_last_node - Disconnects the last node from its parent
+ * @last_node: pointer to the last node
+ */
+void disconnect_last_node(heap_t *last_node)
+{
+	if (last_node->parent && last_node->parent->left == last_node)
+		last_node->parent->left = NULL;
+	else if (last_node->parent && last_node->parent->right == last_node)
+		last_node->parent->right = NULL;
+}
+
+/**
+ * replace_root_with_last - Replaces root with last node and rebalances the heap
+ * @root: double pointer to the root node
+ * @last_node: pointer to the last node
+ */
+void replace_root_with_last(heap_t **root, heap_t *last_node)
+{
+	last_node->left = (*root)->left;
+	last_node->right = (*root)->right;
+	last_node->parent = NULL;
+
+	if (last_node->left)
+		last_node->left->parent = last_node;
+	if (last_node->right)
+		last_node->right->parent = last_node;
+
+	free(*root);
+	*root = last_node;
+	heapify(root);
+}
+
+/**
  * heap_extract - Extracts the root node of a Max Binary Heap
- *
  * @root: double pointer to the root node of the heap
  * Return: the value stored in the root node on success, 0 on failure
  */
@@ -103,11 +135,7 @@ int heap_extract(heap_t **root)
 	if (!last_node)
 		return (0);
 
-	/* Disconnect last node from its parent */
-	if (last_node->parent && last_node->parent->left == last_node)
-		last_node->parent->left = NULL;
-	else if (last_node->parent && last_node->parent->right == last_node)
-		last_node->parent->right = NULL;
+	disconnect_last_node(last_node);
 
 	if (*root == last_node)
 	{
@@ -116,20 +144,7 @@ int heap_extract(heap_t **root)
 		return (value);
 	}
 
-	/* Move last node to the root and re-balance the heap */
-	last_node->left = (*root)->left;
-	last_node->right = (*root)->right;
-	last_node->parent = NULL;
-
-	if (last_node->left)
-		last_node->left->parent = last_node;
-	if (last_node->right)
-		last_node->right->parent = last_node;
-
-	free(*root);
-	*root = last_node;
-
-	heapify(root);
+	replace_root_with_last(root, last_node);
 
 	return (value);
 }
