@@ -1,37 +1,47 @@
 #!/usr/bin/python3
-"""Task 0. Log parsing"""
+""" script that reads stdin line by line and computes metrics """
 
-import sys
+if __name__ == '__main__':
 
-lap = 0
+    import sys
 
-status_codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+    def print_results(statusCodes, fileSize):
+        """ Print statistics """
+        print("File size: {:d}".format(fileSize))
+        for statusCode, times in sorted(statusCodes.items()):
+            if times:
+                print("{:s}: {:d}".format(statusCode, times))
 
-total_size = 0
+    statusCodes = {"200": 0,
+                   "301": 0,
+                   "400": 0,
+                   "401": 0,
+                   "403": 0,
+                   "404": 0,
+                   "405": 0,
+                   "500": 0
+                   }
+    fileSize = 0
+    n_lines = 0
 
-
-def print_stats():
-    """Prints statistics from the beginning"""
-    print("File size: {}".format(total_size))
-    for key in sorted(status_codes.keys()):
-        if status_codes[key] > 0:
-            print("{}: {}".format(key, status_codes[key]))
-
-
-if __name__ == "__main__":
     try:
+        """ Read stdin line by line """
         for line in sys.stdin:
-            lap += 1
+            if n_lines != 0 and n_lines % 10 == 0:
+                """ After every 10 lines, print from the beginning """
+                print_results(statusCodes, fileSize)
+            n_lines += 1
+            data = line.split()
             try:
-                infos = line.split()
-                total_size += int(infos[-1])
-                code = int(infos[-2])
-                if code in status_codes.keys():
-                    status_codes[code] += 1
-            except ValueError:
+                """ Compute metrics """
+                statusCode = data[-2]
+                if statusCode in statusCodes:
+                    statusCodes[statusCode] += 1
+                fileSize += int(data[-1])
+            except:
                 pass
-            if lap % 10 == 0:
-                print_stats()
+        print_results(statusCodes, fileSize)
     except KeyboardInterrupt:
-        print_stats()
-    print_stats()
+        """ Keyboard interruption, print from the beginning """
+        print_results(statusCodes, fileSize)
+        raise
