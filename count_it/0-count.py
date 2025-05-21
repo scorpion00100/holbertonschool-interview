@@ -29,7 +29,9 @@ def count_words(subreddit, word_list, after=None, word_counts=None):
     if after:
         params["after"] = after
 
-    response = requests.get(url, headers=headers, params=params, allow_redirects=False)
+    response = requests.get(
+        url, headers=headers, params=params, allow_redirects=False
+    )
 
     if response.status_code != 200:
         return None
@@ -46,7 +48,7 @@ def count_words(subreddit, word_list, after=None, word_counts=None):
                     clean_word += char
                 else:
                     clean_word += " "
-            
+
             for target_word in word_counts:
                 for part in clean_word.split():
                     if part == target_word:
@@ -60,8 +62,8 @@ def count_words(subreddit, word_list, after=None, word_counts=None):
             [(k, v) for k, v in word_counts.items() if v > 0],
             key=lambda x: (-x[1], x[0])
         )
-        
+
         for word, count in sorted_counts:
             print(f"{word}: {count}")
-        
+
         return None
