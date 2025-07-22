@@ -1,86 +1,60 @@
-#include <stdlib.h>
-#include <string.h>
 #include "substring.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
-// Helper function to find the index of a word in the words array
-int find_word_index(const char *word, char const **words, int nb_words, int word_len)
-{
-    for (int i = 0; i < nb_words; i++)
-    {
-        if (strncmp(word, words[i], word_len) == 0)
-        {
-            return i;
-        }
-    }
-    return -1;
-}
-
+/**
+ * find_substring -  finds all the possible substrings containing a list of
+ * words, within a given string
+ * @s: string to scan
+ * @words:  array of words all substrings must be a concatenation=
+ * arrangement of
+ * @nb_words: number of elements in the array words
+ * @n: address at which to store the number of elements in the returned array
+ *
+ * Return:  an allocated array, storing each index in s, at which a
+ * substring was found. If no solution is found, NULL can be returned
+ */
 int *find_substring(char const *s, char const **words, int nb_words, int *n)
 {
-    int *indices = NULL;                 // Array to store the indices where valid substrings start
-    int s_len = strlen(s);               // Length of the input string
-    int word_len = strlen(words[0]);     // All words are of the same length
-    int total_len = nb_words * word_len; // Total length of the concatenated substring
-    int i, j;
 
-    *n = 0; // Initialize the number of results to 0
+    int i, j, k, current_index, count, string_len, len_of_words, check_strings;
+    int *index_array, *matched;
 
-    // Edge case: if the string is shorter than the total length of concatenated words
-    if (s_len < total_len)
+    if (!s || !words || !n || nb_words == 0)
+        return (NULL);
+
+    string_len = strlen(s);
+    len_of_words = strlen(words[0]);
+    index_array = malloc(string_len * sizeof(int));
+    if (!index_array)
+        return (NULL);
+    matched = malloc(nb_words * sizeof(int));
+    if (!matched)
+        return (NULL);
+
+    for (i = count = 0; i <= string_len - nb_words * len_of_words; i++)
     {
-        return NULL;
-    }
-
-    // Allocate space for the words count in the dictionary (hash map-like structure)
-    int *current_count = (int *)malloc(nb_words * sizeof(int));
-
-    // Traverse through the string with a sliding window of total_len
-    for (i = 0; i <= s_len - total_len; i++)
-    {
-        // Reset word frequency counts
-        memset(current_count, 0, nb_words * sizeof(int));
-
-        // Split the current window into words of size word_len
+        memset(matched, 0, nb_words * sizeof(int));
         for (j = 0; j < nb_words; j++)
         {
-            int word_start = i + j * word_len;
-            const char *current_word = &s[word_start];
-            int word_idx = find_word_index(current_word, words, nb_words, word_len);
-
-            if (word_idx == -1)
+            for (k = 0; k < nb_words; k++)
             {
-                // If the word is not in the list, break early
-                break;
+                current_index = i + j * len_of_words;
+                check_strings = strncmp(s + current_index, *(words + k), len_of_words);
+                if (!*(matched + k) && !check_strings)
+                {
+                    *(matched + k) = 1;
+                    break;
+                }
             }
-
-            current_count[word_idx]++; // Increase count for the word
-
-            // If the count of this word exceeds what is allowed, break early
-            if (current_count[word_idx] > 1)
-            {
+            if (k == nb_words)
                 break;
-            }
         }
-
-        // If we checked all words and they matched exactly once
         if (j == nb_words)
-        {
-            // Allocate or reallocate memory for the indices
-            indices = realloc(indices, (*n + 1) * sizeof(int));
-            indices[*n] = i; // Store the starting index
-            (*n)++;          // Increment the count of valid indices
-        }
+            *(index_array + count) = i, count += 1;
     }
-
-    // Free allocated memory
-    free(current_count);
-
-    // If no valid substring was found, return NULL
-    if (*n == 0)
-    {
-        free(indices);
-        return NULL;
-    }
-
-    return indices;
+    free(matched);
+    *n = count;
+    return (index_array);
 }
